@@ -5,8 +5,10 @@ import nltk
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Ensure the punkt tokenizer is available
 nltk.download('punkt')

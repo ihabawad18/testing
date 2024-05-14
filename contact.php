@@ -1,77 +1,46 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Text Stress Classification</title>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
-
 <body>
-
     <h1>Text Stress Classification</h1>
-
-    <form action="http://localhost:5000/classify" method="post">
-
+    <form id="textForm">
         <label for="text">Enter your text:</label><br>
-
         <textarea id="text" name="text" rows="4" cols="50"></textarea><br>
-
         <input type="submit" value="Submit">
-
     </form>
 
- 
+    <div id="result"></div>
 
-    <?php
+    <script>
+        $(document).ready(function(){
+            $('#textForm').submit(function(e){
+                e.preventDefault();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                var formData = {
+                    'text' : $('#text').val()
+                };
 
-        $data = array('text' => $_POST['text']);
-
-        $url = 'http://localhost:5000/classify';
-
-        $options = array(
-
-            'http' => array(
-
-                'header' => "Content-type: application/json\r\n",
-
-                'method' => 'POST',
-
-                'content' => json_encode($data)
-
-            )
-
-        );
-
-        $context = stream_context_create($options);
-
-        $result = file_get_contents($url, false, $context);
-
-        if ($result === FALSE) {
-
-            echo "Error: Unable to connect to the server.";
-
-        } else {
-
-            $response = json_decode($result, true);
-
-            echo "<p><strong>Entered text:</strong> " . $response['text'] . "</p>";
-
-            echo "<p><strong>Classification:</strong> " . $response['label'] . "</p>";
-
-        }
-
-    }
-
-    ?>
-
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://testing-mb1z.onrender.com/predict',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        console.log(response);
+                        $('#result').html('<p><strong>Entered text:</strong> ' + response.text + '</p>' +
+                                          '<p><strong>Classification:</strong> ' + response.label + '</p>');
+                    },
+                    error: function() {
+                        $('#result').html('<p>Error: Unable to connect to the server.</p>');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
-
 </html>
