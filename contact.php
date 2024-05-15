@@ -32,7 +32,7 @@
                     contentType: 'application/json',
                     success: function(response) {
                         console.log(response);
-                        $('#result').html('<p><strong>Entered text:</strong> ' + response.text + '</p>' +
+                        $('#result').html('<p><strong>Entered text:</strong> ' + formData['text'] + '</p>' +
                                           '<p><strong>Classification:</strong> ' + response.label + '</p>');
                     },
                     error: function() {
